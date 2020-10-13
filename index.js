@@ -5,36 +5,49 @@ for (let i = 0; i < 40; i += 1) {
   const div = document.createElement('div');
 
   div.className = 'intro__item';
+  div.textContent = i + 1;
   document.querySelector('.intro').appendChild(div);
 }
 
+const scrollHeight = Math.max(
+  document.body.scrollHeight,
+  document.documentElement.scrollHeight,
+  document.body.offsetHeight,
+  document.documentElement.offsetHeight,
+  document.body.clientHeight,
+  document.documentElement.clientHeight
+);
+
 const arrAnimateElements = [...document.querySelectorAll('.intro__item')];
-const coordinatesAnimateElements = [];
-
-arrAnimateElements.map((item) => {
-  item.style.visibility = 'hidden';
-  item.style.opacity = '0';
-
-  coordinatesAnimateElements.push(Math.floor(item.getBoundingClientRect().top));
+const coordinatesAnimateElements = arrAnimateElements.map((item) => {
+  return Math.floor(item.getBoundingClientRect().top);
 });
 
 visibleElements();
 window.addEventListener('scroll', visibleElements);
 
 function visibleElements() {
-  setInterval(() => {
+  setTimeout(() => {
     for (let i = 0; i < coordinatesAnimateElements.length; i += 1) {
       if (
         coordinatesAnimateElements[i] <
           pageYOffset + document.documentElement.clientHeight - 300 &&
         coordinatesAnimateElements[i] > pageYOffset - 200
       ) {
-        arrAnimateElements[i].style.visibility = 'visible';
-        arrAnimateElements[i].style.opacity = '1';
+        showElement(arrAnimateElements[i]);
       } else {
-        arrAnimateElements[i].style.visibility = 'hidden';
-        arrAnimateElements[i].style.opacity = '0';
+        hideElement(arrAnimateElements[i]);
       }
     }
-  }, 100);
+  }, 30);
+}
+
+function hideElement(elem) {
+  elem.style.visibility = 'hidden';
+  elem.style.opacity = '0';
+}
+
+function showElement(elem) {
+  elem.style.visibility = 'visible';
+  elem.style.opacity = '1';
 }
